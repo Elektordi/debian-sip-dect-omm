@@ -1,0 +1,12 @@
+##############################################
+# OMM configuration file
+##############################################
+
+# if you use a different interface for omm  activate/correct parameter below
+#OMM_IF="eth0"
+#
+OMM_CONFIG_FILE=/opt/SIP-DECT/tmp/omm_conf.txt
+#
+#if you use OMM resiliency for OMM activate parameter below with OMMs IP adresses
+#OMM_RESILIENCY="192.168.0.1:192.168.0.2"
+#

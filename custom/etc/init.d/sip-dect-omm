@@ -1,0 +1,95 @@
+#! /bin/sh
+#
+# Author: Roman Skrobotz
+# Ported to Debian by Guillaume Genty
+#
+#
+### BEGIN INIT INFO
+# Description:    Start Open Mobility Manager .
+# Provides: 
+# Required-Start: $local_fs $network $syslog
+# Should-Start: SIP-DECT
+# Required-Stop:
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 2 6
+# Short-Description: OMM FFSIP
+# Description: Open Mobility Server for DECT-IP Solution
+### END INIT INFO
+
+# Source function library.
+#. /etc/init.d/functions
+
+
+OMM_ENDLESS="/var/lock/subsys/SIP-DECT-SH.endless"
+OMM_LOCK="/var/lock/subsys/SIP-DECT"
+OMM_BIN="/opt/SIP-DECT/bin/SIP-DECT"
+OMM_START_SCRIPT="/opt/SIP-DECT/bin/SIP-DECT.sh"
+ICS_BIN="/opt/SIP-DECT/bin/ics"
+ 
+start() {
+    if [ `id -u` != 0 ]
+		then
+		echo "only root can do this !"
+		return 1;
+	fi
+    
+ 	echo -n "Starting Open Mobility Manager FFSIP: "
+ 	if [ ! -e "$OMM_LOCK" ]
+ 	   then
+	 	   touch "$OMM_ENDLESS"
+#	       if [ $PPID == 1 ]
+#	       then
+#	        daemon "$OMM_START_SCRIPT"
+#	       else
+	         /bin/sh  "$OMM_START_SCRIPT"&
+#	       fi
+	       touch "$OMM_ENDLESS$!"
+	       success
+	        RETVAL=$?
+     else
+        failure "Could not start because OMM is locked/started, file: $OMM_LOCK"
+        RETVAL=1
+
+    fi    	
+ 	echo	
+ 	[ $RETVAL -eq 0 ] && touch "$OMM_LOCK"
+ 	return $RETVAL
+ }
+
+ stop() {
+ 	echo  "Stopping Open Mobility Manager FFSIP: "
+ 	rm -rf ${OMM_ENDLESS}*        
+ 	killall "$OMM_BIN"
+ 	RETVAL=$? 		
+ 	[ $RETVAL -eq 0 ] && rm -f "$OMM_LOCK"
+ 	 
+	 if [ -x ${ICS_BIN} ]; then	        
+		pidof  ${ICS_BIN}
+		if [ $? -eq 0 ]; then
+		  echo -n "Stopping Open Mobility ICS: "		  
+		  killall "${ICS_BIN}"
+		  RETVAL=`expr $RETVAL + $?`
+		fi  				
+	fi
+
+ 	return $RETVAL
+ }	
+
+case "$1" in
+    start)
+
+	start
+	;;
+    stop)
+	stop
+	;;
+    restart)
+	stop
+	sleep 6
+	start
+	;;
+    *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+	;;
+esac
