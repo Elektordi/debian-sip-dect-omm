@@ -41,10 +41,10 @@ start() {
 #	       then
 #	        daemon "$OMM_START_SCRIPT"
 #	       else
-	         /bin/sh  "$OMM_START_SCRIPT"&
+	         /bin/bash  "$OMM_START_SCRIPT"&
 #	       fi
 	       touch "$OMM_ENDLESS$!"
-	       success
+#	       success
 	        RETVAL=$?
      else
         failure "Could not start because OMM is locked/started, file: $OMM_LOCK"
