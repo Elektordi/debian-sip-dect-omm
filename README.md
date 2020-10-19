@@ -2,8 +2,6 @@
 
 *By Guillaume "Elektordi" Genty*
 
-[![gitcheese.com](https://s3.amazonaws.com/gitcheese-ui-master/images/badge.svg)](https://www.gitcheese.com/donate/users/1229473/repos/48825306)
-
 **Project page on github: https://github.com/Elektordi/debian-sip-dect-omm**
 
 > I will find some time one day to make a real deb package, I will...
